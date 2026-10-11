@@ -1,12 +1,29 @@
-# unpacked plugin folders
+# Личные настройки и индивидуальный характер.
+.env
+.env.*
+!.env.example
+bratik-personality.local.md
+
+# История, память и рабочие файлы SQLite.
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+backups/
+exports/
+bratik-export-*.json
+data/
+
+# Воспроизводимые и служебные файлы.
+node_modules/
+*.log
+.DS_Store
+
+# Existing repository exclusions.
 plugins/**/*
-
-# files directory where uploads go
 files
-
-# DBMigrate plugin: generated SQL
 db/sql
-
-# AssetBundler plugin: generated bundles
 javascripts/bundles
 stylesheets/bundles

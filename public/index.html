@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151512">
+  <meta name="description" content="Братик Core — локальный AI-напарник с историей разговора и памятью, которую ты подтверждаешь сам.">
+  <title>Братик — локальный напарник</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#input">К сообщению</a>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand"><div class="brand-mark" aria-hidden="true">444<span></span></div><div><div class="brand-line"><h1>Братик</h1><span class="version">CORE / 0.3</span></div><p>Твой локальный напарник.</p></div></div>
+      <div class="header-actions"><span class="connection-badge" id="connection-badge" data-state="checking"><span class="status-dot" aria-hidden="true"></span><span id="connection-label">Проверяю соединение</span></span><button type="button" class="icon-button controls-toggle" id="controls-toggle" aria-expanded="false" aria-controls="controls-panel" aria-label="Открыть модель и память"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 17h16M9 4v6M15 14v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
+    </header>
+    <main class="workspace">
+      <section class="conversation" aria-labelledby="conversation-title">
+        <div class="conversation-header"><div><p class="eyebrow">МЫСЛИ · ИДЕИ · ДЕЛА</p><h2 id="conversation-title">Разговор с Братиком</h2></div><span class="local-label"><span aria-hidden="true">◌</span> На этом компьютере</span></div>
+        <div class="chat-scroll" id="chat-scroll" tabindex="0" aria-label="История разговора">
+          <div class="history-tools"><button type="button" class="quiet-button" id="load-earlier" hidden>Показать предыдущие сообщения</button><p class="small-note" id="history-status" role="status">Загружаю разговор…</p><button type="button" class="quiet-button" id="retry-history" hidden>Загрузить историю снова</button></div>
+          <div class="empty-state" id="empty-state" hidden><span class="empty-mark" aria-hidden="true">б.</span><p class="eyebrow">МЕСТО ДЛЯ ТВОИХ МЫСЛЕЙ</p><h3>С чего начнём, братик?</h3><p>Приноси идею, непростой вопрос или дело, которое пора сдвинуть с места.</p><div class="starter-actions"><button type="button" data-prompt="Помоги разобрать мою идею: ">Разобрать идею <span aria-hidden="true">↗</span></button><button type="button" data-prompt="Помоги составить план для задачи: ">Собрать план <span aria-hidden="true">↗</span></button></div></div>
+          <div class="chat-log" id="chat" role="log" aria-label="Сообщения" aria-live="polite" aria-relevant="additions" aria-busy="true"></div>
+          <div class="thinking" id="thinking" role="status" hidden><span class="thinking-mark" aria-hidden="true"></span><div><strong id="thinking-title">Братик готовит ответ…</strong><p id="thinking-detail">Скорость зависит от модели и компьютера.</p></div></div>
+        </div>
+        <div class="composer-area">
+          <div class="turn-error" id="turn-error" role="alert" hidden><div class="turn-error-copy"><strong id="turn-error-title"></strong><p id="turn-error-detail"></p></div><div class="error-actions"><button type="button" class="small-button" id="retry-turn">Повторить запрос</button><button type="button" class="quiet-button" id="check-turn">Проверить ответ</button><button type="button" class="quiet-button" id="edit-failed-turn" hidden>Вернуть в черновик</button></div></div>
+          <p class="answer-meta" id="answer-meta" role="status"></p>
+          <form id="form">
+            <div class="composer-top"><label for="input">Твоё сообщение</label><span id="input-count" class="input-count">0 / 8000</span></div>
+            <textarea id="input" name="message" rows="3" maxlength="8000" placeholder="Я слушаю. Напиши, что у тебя на уме…" aria-describedby="input-hint draft-status" required></textarea>
+            <div class="composer-bottom"><p id="input-hint">Enter — отправить <span>·</span> Shift + Enter — новая строка</p><button type="submit" class="send-button" id="send-button" disabled><span id="send-label">Отправить</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+          </form>
+          <p class="small-note draft-status" id="draft-status" role="status"></p>
+        </div>
+      </section>
+      <aside class="controls-panel" id="controls-panel" aria-label="Модель и память">
+        <section class="panel model-panel" aria-labelledby="model-title">
+          <div class="panel-heading"><div><p class="eyebrow">ЛОКАЛЬНОЕ ЯДРО</p><h2 id="model-title">Модель</h2></div><button type="button" class="icon-button" id="refresh-status" aria-label="Проверить Ollama и обновить модели"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19.5 9A8 8 0 1 0 20 14M20 4v5h-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+          <div class="diagnostic" id="diagnostic" data-state="checking"><span class="diagnostic-symbol" aria-hidden="true">○</span><div><strong id="diagnostic-title">Проверяю Ollama…</strong><p id="diagnostic-message">Нужны работающая Ollama и установленная модель.</p></div></div>
+          <label class="field-label" for="model-select">Установленная модель</label><div class="select-wrap"><select id="model-select" disabled aria-describedby="model-note"><option value="">Загружаю список…</option></select><span aria-hidden="true">⌄</span></div>
+          <p class="small-note" id="model-note">Модель выполняет запросы через Ollama.</p><p class="inline-feedback" id="settings-status" role="status"></p>
+          <details class="diagnostic-details"><summary>Детали подключения</summary><dl><div><dt>Ollama</dt><dd id="ollama-address">Проверяется</dd></div><div><dt>Выбрана</dt><dd id="active-model">—</dd></div></dl><p>Если Ollama недоступна, запусти её на этом компьютере и нажми кнопку проверки.</p></details>
+        </section>
+        <section class="panel memory-panel" aria-labelledby="memory-title">
+          <div class="panel-heading"><div><p class="eyebrow">ТО, ЧТО ОСТАЁТСЯ</p><h2 id="memory-title">Память</h2></div><span class="memory-total" id="memory-total">0</span></div>
+          <p class="panel-intro">Братик предлагает, ты решаешь. Подтверждённые записи помогают ему учитывать твой контекст.</p>
+          <div class="memory-filters" role="group" aria-label="Состояние памяти"><button type="button" data-memory-filter="pending" aria-pressed="true" aria-controls="memories">На проверке <span id="pending-count">0</span></button><button type="button" data-memory-filter="approved" aria-pressed="false" aria-controls="memories">Подтверждено <span id="approved-count">0</span></button></div>
+          <div class="reflection-status" id="reflection-status" role="status" hidden><span class="reflection-dot" aria-hidden="true"></span><p id="reflection-message"></p></div><button type="button" class="quiet-button retry-reflection" id="retry-reflection" hidden>Повторить извлечение памяти</button>
+          <p class="small-note" id="memory-filter-hint">На проверке — сохранено для просмотра, пока не добавляется в память для ответов.</p><p class="inline-feedback" id="memory-feedback" role="status"></p><div class="memory-list" id="memories" aria-live="polite" aria-busy="true"><p class="memory-empty">Загружаю память…</p></div><button type="button" class="quiet-button" id="retry-memories" hidden>Загрузить память снова</button><p class="memory-range" id="memory-range"></p><p class="memory-policy">«Забыть» исключает запись из памяти для ответов. Переписка и след блокировки остаются в локальной базе.</p>
+        </section>
+        <section class="local-footer" aria-label="Хранение данных"><div class="local-footer-heading"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><strong>Твоя история — рядом</strong></div><p>Разговор и память хранятся в базе Братика на этом компьютере.</p><button type="button" class="export-button" id="export-data"><span>Скачать историю и память</span><span aria-hidden="true">↓</span></button><p class="small-note" id="export-status" role="status"></p></section>
+      </aside>
+    </main>
+    <footer class="app-footer"><span>БРАТИК CORE</span><span>Один разговор. Свой контекст.</span><span aria-hidden="true">444</span></footer>
+  </div>
+  <noscript><div class="noscript-note">Для разговора с Братиком включи JavaScript в этом браузере.</div></noscript>
+</body>
+</html>
